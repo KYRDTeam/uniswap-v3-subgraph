@@ -33,12 +33,14 @@ export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: Token, t
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
   let usdcPool = Pool.load(USDC_WETH_005_POOL) // usdc is token1
-  if (usdcPool !== null) {
+
+  // need to only count ETH as having valid USD price if lots of ETH in pool
+  if (usdcPool !== null && usdcPool.totalValueLockedToken0.gt(MINIMUM_ETH_LOCKED)) {
     return usdcPool.token1Price
   } else {
     return ZERO_BD
   }
-}
+
 
 /**
  * Search through graph to find derived Eth per token.
