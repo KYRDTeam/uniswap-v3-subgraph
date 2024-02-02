@@ -36,7 +36,7 @@ export function getEthPriceInUSD(): BigDecimal {
 
   // need to only count ETH as having valid USD price if lots of ETH in pool
   if (usdcPool !== null && usdcPool.totalValueLockedToken0.gt(MINIMUM_ETH_LOCKED)) {
-    return usdcPool.token1Price
+    return usdcPool.token0Price
   } else {
     return ZERO_BD
   }
