@@ -40,7 +40,7 @@ export function getEthPriceInUSD(): BigDecimal {
   } else {
     return ZERO_BD
   }
-
+}
 
 /**
  * Search through graph to find derived Eth per token.

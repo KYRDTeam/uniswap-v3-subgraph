@@ -13,6 +13,8 @@
     "deploy-polygon": "graph deploy nguyennk92/uniswap-v3-polygon --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
     "deploy-arbitrum": "graph deploy nguyennk92/uniswap-v3-arbitrum --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
     "deploy-optimism": "graph deploy nguyennk92/uniswap-v3-optimism --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
+    "deploy-arbitrum-alchemy": "graph deploy uniswap-v3-arbitrum --version-label v0.0.1 --deploy-key X6wSAcbt20XTv --ipfs https://ipfs.satsuma.xyz --node https://subgraphs.alchemy.com/api/subgraphs/deploy --debug",
+    "deploy-polygon-alchemy": "graph deploy uniswap-v3-polygon --version-label v0.0.1 --deploy-key X6wSAcbt20XTv --ipfs https://ipfs.satsuma.xyz --node https://subgraphs.alchemy.com/api/subgraphs/deploy --debug",
     "prepare-polygon": "mustache configs/polygon.json subgraph.yaml.template > subgraph.yaml",
     "prepare-arbitrum": "mustache configs/arbitrum.json subgraph.yaml.template > subgraph.yaml",
     "prepare-optimism": "mustache configs/optimism.json subgraph.yaml.template > subgraph.yaml",
