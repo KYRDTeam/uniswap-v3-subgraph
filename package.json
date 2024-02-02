@@ -6,12 +6,17 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
-    "create-local": "graph create ianlapham/uniswap-v3 --node http://127.0.0.1:8020",
-    "deploy-local": "graph deploy ianlapham/uniswap-v3 --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
-    "deploy": "graph deploy ianlapham/uniswap-v3-subgraph --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
+    "create-local": "graph create nguyennk92/uniswap-v3-polygon-local --node http://127.0.0.1:8020",
+    "deploy-local": "graph deploy nguyennk92/uniswap-v3-polygon-local --debug --ipfs http://localhost:5001 --node http://127.0.0.1:8020",
     "deploy-dev": "graph deploy sommelier/uniswap-v3 --ipfs http://35.197.14.14:5000/ --node http://35.197.14.14:8020/ --debug",
     "deploy-staging": "graph deploy $THE_GRAPH_GITHUB_USER/$THE_GRAPH_SUBGRAPH_NAME /Uniswap --ipfs https://api.staging.thegraph.com/ipfs/ --node https://api.staging.thegraph.com/deploy/",
-    "watch-local": "graph deploy ianlapham/uniswap-v3 --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
+    "deploy-polygon": "graph deploy nguyennk92/uniswap-v3-polygon --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
+    "deploy-arbitrum": "graph deploy nguyennk92/uniswap-v3-arbitrum --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
+    "deploy-optimism": "graph deploy nguyennk92/uniswap-v3-optimism --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/ --debug",
+    "prepare-polygon": "mustache configs/polygon.json subgraph.yaml.template > subgraph.yaml",
+    "prepare-arbitrum": "mustache configs/arbitrum.json subgraph.yaml.template > subgraph.yaml",
+    "prepare-optimism": "mustache configs/optimism.json subgraph.yaml.template > subgraph.yaml",
+    "watch-local": "graph deploy nguyennk92/uniswap-v3 --watch --debug --node http://127.0.0.1:8020/ --ipfs http://localhost:5001"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.20.0",
@@ -22,5 +27,8 @@
     "eslint-config-prettier": "^6.1.0",
     "prettier": "^1.18.2",
     "typescript": "^3.5.2"
+  },
+  "dependencies": {
+    "mustache": "^4.2.0"
   }
 }
