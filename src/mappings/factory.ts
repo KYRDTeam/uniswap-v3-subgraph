@@ -7,6 +7,7 @@ import { Pool, Token, Bundle } from '../types/schema'
 import { Pool as PoolTemplate } from '../types/templates'
 import { fetchTokenSymbol, fetchTokenName, fetchTokenTotalSupply, fetchTokenDecimals } from '../utils/token'
 import { log, BigInt, Address } from '@graphprotocol/graph-ts'
+import { populateEmptyPools } from '../utils/backfill'
 
 export function handlePoolCreated(event: PoolCreated): void {
   // temp fix
@@ -14,11 +15,23 @@ export function handlePoolCreated(event: PoolCreated): void {
     return
   }
 
+  // fix for pool overflow - this pool has a token that overflows on one of its values, but theres no way in 
+  // assembly ts to error catch for this. 
+  // Transaction - https://optimistic.etherscan.io/tx/0x16312a52237ce08e4bb7534648f4c8da6cd4c192f0b955cf6770b2d347f19d2b
+  if (
+    event.params.pool   === Address.fromHexString('0x282b7d6bef6c78927f394330dca297eca2bd18cd') 
+    || event.params.pool === Address.fromHexString('0x5738de8d0b864d5ef5d65b9e05b421b71f2c2eb4') 
+    || event.params.pool === Address.fromHexString('0x5500721e5a063f0396c5e025a640e8491eb89aac')
+    || event.params.pool === Address.fromHexString('0x1ffd370f9d01f75de2cc701956886acec9749e80')
+  ) {
+    return 
+  }
+
   // load factory
   let factory = Factory.load(FACTORY_ADDRESS)
   if (factory === null) {
     factory = new Factory(FACTORY_ADDRESS)
-    factory.poolCount = ZERO_BI
+    factory.poolCount = BigInt.fromI32(104)
     factory.totalVolumeETH = ZERO_BD
     factory.totalVolumeUSD = ZERO_BD
     factory.untrackedVolumeUSD = ZERO_BD
@@ -30,6 +43,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     factory.totalValueLockedETHUntracked = ZERO_BD
     factory.txCount = ZERO_BI
     factory.owner = ADDRESS_ZERO
+    factory.populated = false
 
     // create new bundle for tracking eth price
     let bundle = new Bundle('1')
@@ -137,8 +151,13 @@ export function handlePoolCreated(event: PoolCreated): void {
   pool.collectedFeesToken1 = ZERO_BD
   pool.collectedFeesUSD = ZERO_BD
 
+  // populate pre-regenesis pools if needed
+  if (factory.populated == false) {
+    populateEmptyPools(event)
+    factory.populated = true
+  }
+
   pool.save()
-  // create the tracked contract based on the template
   PoolTemplate.create(event.params.pool)
   token0.save()
   token1.save()
