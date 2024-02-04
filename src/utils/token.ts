@@ -74,6 +74,11 @@ export function fetchTokenTotalSupply(tokenAddress: Address): BigInt {
 }
 
 export function fetchTokenDecimals(tokenAddress: Address): BigInt {
+  let staticTokenDefinition = StaticTokenDefinition.fromAddress(tokenAddress)
+  if(staticTokenDefinition != null) {
+    return staticTokenDefinition.decimals
+  }
+
   let contract = ERC20.bind(tokenAddress)
   // try types uint8 for decimals
   let decimalResult = contract.tryCall("decimals", "decimals():(uint8)", []);
@@ -85,12 +90,6 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
       if (value.toBigInt().le(BigInt.fromI32(255))) {
         return value.toBigInt()
       }
-    }
-  } else {
-    // try with the static definition
-    let staticTokenDefinition = StaticTokenDefinition.fromAddress(tokenAddress)
-    if(staticTokenDefinition != null) {
-      return staticTokenDefinition.decimals
     }
   }
 
